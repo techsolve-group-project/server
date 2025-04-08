@@ -151,7 +151,7 @@ Response (200 - OK)
 ```json
 [
   {
-    "id": "string",
+    "id": "integer",
     "name": "string",
     "email": "string"
   },
@@ -177,9 +177,233 @@ Response (200 - OK)
 
 ```json
 {
-  "id": "string",
+  "id": "integer",
   "name": "string",
   "email": "string"
+}
+```
+
+## 5. POST /questions
+
+Create a new comment for a specific question.
+
+Request:
+
+- Headers:
+
+```json
+{
+  "Authorization": "Bearer <access_token>"
+}
+```
+
+- Body:
+
+```json
+{
+  "text": "string",
+  "vote": "string"
+}
+```
+
+Response (201 - Created)
+
+```json
+{
+  "id": "integer",
+  "UserId": "integer",
+  "QuestionPostId": "integer",
+  "text": "string",
+  "vote": "integer"
+}
+```
+
+## 6. GET /questions
+
+Get all questions.
+
+Request:
+
+- Headers:
+
+```json
+{
+  "Authorization": "Bearer <access_token>"
+}
+```
+
+Response (200 - OK)
+
+```json
+[
+  {
+    "id": "integer",
+    "UserId": "integer",
+    "title": "string",
+    "text": "string",
+    "aiAnswer": "string"
+  },
+  ...
+]
+```
+
+## 7. GET /questions/my-questions
+
+Get all questions created by the current user.
+
+Request:
+
+- Headers:
+
+```json
+{
+  "Authorization": "Bearer <access_token>"
+}
+```
+
+Response (200 - OK)
+
+```json
+[
+  {
+    "id": "integer",
+    "UserId": "integer",
+    "title": "string",
+    "text": "string",
+    "aiAnswer": "string"
+  },
+  ...
+]
+```
+
+## 8. GET /questions/:id
+
+Get a specific question by ID.
+
+Request:
+
+- Headers:
+
+```json
+{
+  "Authorization": "Bearer <access_token>"
+}
+```
+
+- Params:
+
+```json
+{
+  "id": "integer"
+}
+```
+
+Response (200 - OK)
+
+```json
+{
+  "id": "integer",
+  "UserId": "integer",
+  "title": "string",
+  "text": "string",
+  "aiAnswer": "string"
+}
+```
+
+Response (404 - Not Found)
+
+```json
+{
+  "message": "Question not found"
+}
+```
+
+## 9. PUT /questions/:id
+
+Update a specific question by ID.
+
+Request:
+
+- Headers:
+
+```json
+{
+  "Authorization": "Bearer <access_token>"
+}
+```
+
+- Params:
+
+```json
+{
+  "id": "integer"
+}
+```
+
+- Body:
+
+```json
+{
+  "title": "string",
+  "text": "string"
+}
+```
+
+Response (200 - OK)
+
+```json
+{
+  "id": "integer",
+  "UserId": "integer",
+  "title": "string",
+  "text": "string",
+  "aiAnswer": "string"
+}
+```
+
+Response (404 - Not Found)
+
+```json
+{
+  "message": "Question not found"
+}
+```
+
+## 10. DELETE /questions/:id
+
+Delete a specific question by ID.
+
+Request:
+
+- Headers:
+
+```json
+{
+  "Authorization": "Bearer <access_token>"
+}
+```
+
+- Params:
+
+```json
+{
+  "id": "integer"
+}
+```
+
+Response (200 - OK)
+
+```json
+{
+  "message": "Question deleted successfully"
+}
+```
+
+Response (404 - Not Found)
+
+```json
+{
+  "message": "Question not found"
 }
 ```
 
