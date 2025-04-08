@@ -1,18 +1,20 @@
-const { Favourite } = require("../models");
+const { QuestionPost } = require("../models");
 
 async function ownerOnly(req, res, next) {
   try {
     const { id } = req.params;
-    const userId = req.user.id;
+    const UserId = req.user.id;
 
-    const favourite = await Favourite.findByPk(id);
-    if (!favourite) {
-      throw { name: "NotFound", message: "Hero not found" };
+    const question = await QuestionPost.findByPk(id);
+    if (!question) {
+      throw { name: "NotFound", message: "Question not found" };
     }
 
-    if (favourite.userId !== userId) {
+    if (question.UserId !== UserId) {
       throw { name: "Forbidden", message: "You are not authorized" };
     }
+
+    req.question = question;
 
     next();
   } catch (error) {
@@ -20,4 +22,4 @@ async function ownerOnly(req, res, next) {
   }
 }
 
-module.exports = ownerOnly;
+module.exports = { ownerOnly };
