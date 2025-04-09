@@ -35,7 +35,7 @@ class QuestionPostController {
       const questions = await QuestionPost.findAll({
         include: [
           { model: User, attributes: ['id', 'name', 'email'] },
-          { model: Comment, attributes: ['UserId', 'text', 'vote'], include: { model: User, attributes: ['id', 'name', 'email'] } },
+          { model: Comment, attributes: ['UserId', 'text', 'vote', 'createdAt'], include: { model: User, attributes: ['id', 'name', 'email'] } },
         ],
       });
 
@@ -53,6 +53,7 @@ class QuestionPostController {
         where: {
           UserId: UserId,
         },
+        include: [{ model: Comment, attributes: ['UserId', 'text', 'vote', 'createdAt'] }],
       });
 
       res.status(200).json(questions);
@@ -71,7 +72,7 @@ class QuestionPostController {
             model: User,
             attributes: ['id', 'name', 'email'],
           },
-          { model: Comment, attributes: ['UserId', 'text', 'vote'], include: { model: User, attributes: ['id', 'name', 'email'] } },
+          { model: Comment, attributes: ['UserId', 'text', 'vote', 'createdAt'], include: { model: User, attributes: ['id', 'name', 'email'] } },
         ],
       });
 
