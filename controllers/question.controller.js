@@ -1,5 +1,5 @@
-const { QuestionPost, User, Comment } = require('../models');
-const { GoogleGenAI } = require('@google/genai');
+const { QuestionPost, User, Comment } = require("../models");
+const { GoogleGenAI } = require("@google/genai");
 
 class QuestionPostController {
   static async createQuestion(req, res, next) {
@@ -7,14 +7,18 @@ class QuestionPostController {
       const { title, text } = req.body;
       // --AI LOGIC
       const ai = new GoogleGenAI({
-        apiKey: 'AIzaSyABeKlk4uZOFIXt9v7JH37Z1IQKGaJEzU0',
+        apiKey: "AIzaSyABeKlk4uZOFIXt9v7JH37Z1IQKGaJEzU0",
       });
 
       const response = await ai.models.generateContent({
-        model: 'gemini-2.0-flash',
+        model: "gemini-2.0-flash",
         contents: `As an expert in technology world, can you answer the question '${text}' in technology scope?. And if ${text} doesn't meet the technology context, give a random trivia about technology. And if the ${text} meet technology context, give the answer. Gimme an answer in Indonesian language and character maximal is 100 (include space) due to sequelize error long character maximal, and turn it into one paragraph format`,
       });
-      let answer = response.text.replace(/\n/g, '').replace(/\*/g, '').replace(/\\"/g, '"').replace(/\\\\/g, '\\');
+      let answer = response.text
+        .replace(/\n/g, "")
+        .replace(/\*/g, "")
+        .replace(/\\"/g, '"')
+        .replace(/\\\\/g, "\\");
       console.log(answer);
       // --
       const newQuestion = await QuestionPost.create({
@@ -77,7 +81,7 @@ class QuestionPostController {
       });
 
       if (!question) {
-        return res.status(404).json({ message: 'Question not found' });
+        return res.status(404).json({ message: "Question not found" });
       }
 
       res.status(200).json(question);
@@ -90,7 +94,22 @@ class QuestionPostController {
     try {
       const { title, text } = req.body;
 
-      await req.question.update({ title, text });
+      const ai = new GoogleGenAI({
+        apiKey: "AIzaSyABeKlk4uZOFIXt9v7JH37Z1IQKGaJEzU0",
+      });
+
+      const response = await ai.models.generateContent({
+        model: "gemini-2.0-flash",
+        contents: `As an expert in technology world, can you answer the question '${text}' in technology scope?. And if ${text} doesn't meet the technology context, give a random trivia about technology. And if the ${text} meet technology context, give the answer. Gimme an answer in Indonesian language and character maximal is 100 (include space) due to sequelize error long character maximal, and turn it into one paragraph format`,
+      });
+      let answer = response.text
+        .replace(/\n/g, "")
+        .replace(/\*/g, "")
+        .replace(/\\"/g, '"')
+        .replace(/\\\\/g, "\\");
+      console.log(answer);
+
+      await req.question.update({ title, text, aiAnswer: answer });
 
       res.status(200).json(req.question);
     } catch (error) {
@@ -102,7 +121,7 @@ class QuestionPostController {
     try {
       await req.question.destroy();
 
-      res.status(200).json({ message: 'Question deleted successfully' });
+      res.status(200).json({ message: "Question deleted successfully" });
     } catch (error) {
       next(error);
     }

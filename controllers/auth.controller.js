@@ -10,6 +10,7 @@ class AuthController {
 
       const newUser = await User.create({ name, email, password });
       res.status(201).json({
+        id: newUser.id,
         name: newUser.name,
         email: newUser.email,
       });
@@ -50,38 +51,38 @@ class AuthController {
 
   static async loginWithGoogle(req, res, next) {
     try {
-      const {googleToken} = req.body
-      console.log(googleToken, '<<< tokengoogle');
+      const { googleToken } = req.body;
+      console.log(googleToken, "<<< tokengoogle");
       const client = new OAuth2Client();
 
       const ticket = await client.verifyIdToken({
         idToken: googleToken,
-        audience: process.env.GOOGLE_CLIENT_API,  // Specify the WEB_CLIENT_ID of the app that accesses the backend
+        audience: process.env.GOOGLE_CLIENT_API, // Specify the WEB_CLIENT_ID of the app that accesses the backend
         // Or, if multiple clients access the backend:
         //[WEB_CLIENT_ID_1, WEB_CLIENT_ID_2, WEB_CLIENT_ID_3]
-    });
-    const payload = ticket.getPayload();
-    console.log(payload, '<<< payload');
-    const userid = payload['sub'];
-    const [user] = await User.findOrCreate({
-      where: {
-        email: payload.email
-      },
-      defaults: {
-        name: payload.name,
-        email: payload.email,
-        password: `${Math.random()} + ${Date.now()}`
-      }
-    })
+      });
+      const payload = ticket.getPayload();
+      console.log(payload, "<<< payload");
+      const userid = payload["sub"];
+      const [user] = await User.findOrCreate({
+        where: {
+          email: payload.email,
+        },
+        defaults: {
+          name: payload.name,
+          email: payload.email,
+          password: `${Math.random()} + ${Date.now()}`,
+        },
+      });
 
-    let access_token = signToken({
-      id: user.id,
-    })
-    // If the request specified a Google Workspace domain:
-    // const domain = payload['hd'];
-      res.json({access_token})
+      let access_token = signToken({
+        id: user.id,
+      });
+      // If the request specified a Google Workspace domain:
+      // const domain = payload['hd'];
+      res.json({ access_token });
     } catch (error) {
-      next(error); 
+      next(error);
     }
   }
 }
