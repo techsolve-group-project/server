@@ -2,7 +2,7 @@ const express = require("express");
 
 const QuestionPostController = require("../controllers/question.controller");
 
-const { ownerOnly } = require("../middlewares/authorization");
+const { questionOwnerOnly } = require("../middlewares/authorization");
 
 const router = express.Router();
 
@@ -11,7 +11,7 @@ router.get("/", QuestionPostController.getAllQuestions);
 router.get("/my-questions", QuestionPostController.getQuestionByUser);
 router.get("/:id", QuestionPostController.getQuestionById);
 
-router.put("/:id", ownerOnly, QuestionPostController.updateQuestion);
-router.delete("/:id", ownerOnly, QuestionPostController.deleteQuestion);
+router.put("/:id", questionOwnerOnly, QuestionPostController.updateQuestion);
+router.delete("/:id", questionOwnerOnly, QuestionPostController.deleteQuestion);
 
 module.exports = router;

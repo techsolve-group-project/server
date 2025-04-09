@@ -1,6 +1,6 @@
-const { QuestionPost } = require("../models");
+const { QuestionPost, Comment } = require("../models");
 
-async function ownerOnly(req, res, next) {
+async function questionOwnerOnly(req, res, next) {
   try {
     const { id } = req.params;
     const UserId = req.user.id;
@@ -22,4 +22,29 @@ async function ownerOnly(req, res, next) {
   }
 }
 
-module.exports = { ownerOnly };
+async function commentOwnerOnly(req, res, next) {
+  try {
+    const { id } = req.params;
+    const UserId = req.user.id;
+
+    const comment = await Comment.findByPk(id);
+    if (!comment) {
+      throw { name: "NotFound", message: "Comment not found" };
+    }
+
+    if (comment.UserId !== UserId) {
+      throw { name: "Forbidden", message: "You are not authorized" };
+    }
+
+    req.comment = comment;
+
+    next();
+  } catch (error) {
+    next(error);
+  }
+}
+
+module.exports = {
+  questionOwnerOnly,
+  commentOwnerOnly,
+};
