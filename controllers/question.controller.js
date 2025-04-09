@@ -66,10 +66,13 @@ class QuestionPostController {
       const { id } = req.params;
 
       const question = await QuestionPost.findByPk(id, {
-        include: {
-          model: User,
-          attributes: ['id', 'name', 'email'],
-        },
+        include: [
+          {
+            model: User,
+            attributes: ['id', 'name', 'email'],
+          },
+          { model: Comment, attributes: ['UserId', 'text', 'vote'], include: { model: User, attributes: ['id', 'name', 'email'] } },
+        ],
       });
 
       if (!question) {
