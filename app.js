@@ -8,7 +8,11 @@ const app = express();
 const { createServer } = require("http");
 const { Server } = require("socket.io");
 const httpServer = createServer(app);
-const io = new Server(httpServer, { /* options */ });
+const io = new Server(httpServer, { 
+  cors: {
+    origin: '*'
+  }
+ });
 
 app.use(cors());
 app.use(express.json());
