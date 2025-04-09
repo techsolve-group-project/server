@@ -56,7 +56,11 @@ class CommentController {
       if (type === "up") {
         comment.vote += 1;
       } else if (type === "down") {
-        comment.vote -= 1;
+        if (comment.vote > 0) {
+          comment.vote -= 1;
+        }
+      } else {
+        throw { name: "BadRequest", message: "Invalid vote type" };
       }
 
       await comment.save();
