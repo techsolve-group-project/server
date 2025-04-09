@@ -5,6 +5,14 @@ const { router } = require("./routes/root.route");
 const errorHandler = require("./middlewares/errorHandler");
 
 const app = express();
+const { createServer } = require("http");
+const { Server } = require("socket.io");
+const httpServer = createServer(app);
+const io = new Server(httpServer, { 
+  cors: {
+    origin: '*'
+  }
+ });
 
 app.use(cors());
 app.use(express.json());
@@ -14,6 +22,13 @@ app.use(router);
 
 app.use(errorHandler);
 
-app.listen(3000, () => {
+io.on("connection", (socket) => {
+  // ...
+  console.log(socket);
+  console.log(socket.id, '<------ connected socket id');
+  socket.emit('welcome_msg', 'Welcome to TechSolve Server!')
+});
+
+httpServer.listen(3000, () => {
   console.log("Server is running on port 3000");
 });
