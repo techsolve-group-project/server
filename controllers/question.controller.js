@@ -1,17 +1,30 @@
 const { QuestionPost, User } = require("../models");
+const { GoogleGenAI } = require("@google/genai");
 
 class QuestionPostController {
+
   static async createQuestion(req, res, next) {
     try {
       const { title, text } = req.body;
+// --AI LOGIC
+      const ai = new GoogleGenAI({
+        apiKey: "AIzaSyABeKlk4uZOFIXt9v7JH37Z1IQKGaJEzU0",
+      });
 
+      const response = await ai.models.generateContent({
+        model: "gemini-2.0-flash",
+        contents: `As an expert in technology world, can you answer the question '${text}' in technology scope?. And if ${text} doesn't meet the technology context, give a random trivia about technology. And if the ${text} meet technology context, give the answer. Gimme an answer in Indonesian language and character maximal is 100 (include space) due to sequelize error long character maximal, and turn it into one paragraph format`,
+      });
+      let answer = response.text.replace(/\n/g, '').replace(/\*/g, '').replace(/\\"/g, '"').replace(/\\\\/g, '\\');
+      console.log(answer);
+// --
       const newQuestion = await QuestionPost.create({
         UserId: req.user.id,
         title,
         text,
-        aiAnswer: "AI belum dijawab", // masih dummy
+        aiAnswer: answer, // udah AI, tapi terkadang lebih dari 255 karakter, kena error sequelize
       });
-
+      
       res.status(201).json(newQuestion);
     } catch (error) {
       next(error);
