@@ -39,6 +39,19 @@ Routes below need authentication:
 
 - `GET /users`
 - `GET /users/profile`
+- `POST /questions`
+- `GET /questions`
+- `GET /questions/my-questions`
+- `GET /questions/:id`
+- `POST /comments/:questionPostId`
+- `PATCH /comments/:id/vote`
+
+Routes below need authorization:
+
+- `PUT /questions/:id`
+- `DELETE /questions/:id`
+- `PUT /comments/:id`
+- `DELETE /comments/:id`
 
 ## 1. POST /auth/register
 
@@ -404,6 +417,186 @@ Response (404 - Not Found)
 ```json
 {
   "message": "Question not found"
+}
+```
+
+## 11. POST /comments/:questionPostId
+
+Create a new comment for a specific question.
+
+Request:
+
+- Headers:
+
+```json
+{
+  "Authorization": "Bearer <access_token>"
+}
+```
+
+- Params:
+
+```json
+{
+  "questionPostId": "integer"
+}
+```
+
+- Body:
+
+```json
+{
+  "text": "string"
+}
+```
+
+Response (201 - Created)
+
+```json
+{
+  "id": "integer",
+  "UserId": "integer",
+  "QuestionPostId": "integer",
+  "text": "string",
+  "vote": "integer"
+}
+```
+
+## 12. PUT /comments/:id
+
+Update a specific comment by ID.
+
+Request:
+
+- Headers:
+
+```json
+{
+  "Authorization": "Bearer <access_token>"
+}
+```
+
+- Params:
+
+```json
+{
+  "id": "integer"
+}
+```
+
+- Body:
+
+```json
+{
+  "text": "string"
+}
+```
+
+Response (200 - OK)
+
+```json
+{
+  "id": "integer",
+  "UserId": "integer",
+  "QuestionPostId": "integer",
+  "text": "string",
+  "vote": "integer"
+}
+```
+
+Response (404 - Not Found)
+
+```json
+{
+  "message": "Comment not found"
+}
+```
+
+## 13. DELETE /comments/:id
+
+Delete a specific comment by ID.
+
+Request:
+
+- Headers:
+
+```json
+{
+  "Authorization": "Bearer <access_token>"
+}
+```
+
+- Params:
+
+```json
+{
+  "id": "integer"
+}
+```
+
+Response (200 - OK)
+
+```json
+{
+  "message": "Comment deleted successfully"
+}
+```
+
+Response (404 - Not Found)
+
+```json
+{
+  "message": "Comment not found"
+}
+```
+
+## 14. PATCH /comments/:id/vote
+
+Update a specific comment vote by ID.
+
+Request:
+
+- Headers:
+
+```json
+{
+  "Authorization": "Bearer <access_token>"
+}
+```
+
+- Params:
+
+```json
+{
+  "id": "integer"
+}
+```
+
+- Query:
+
+```json
+{
+  "type": "string" // "up" or "down"
+}
+```
+
+Response (200 - OK)
+
+```json
+{
+  "id": "integer",
+  "UserId": "integer",
+  "QuestionPostId": "integer",
+  "text": "string",
+  "vote": "integer"
+}
+```
+
+Response (404 - Not Found)
+
+```json
+{
+  "message": "Comment not found"
 }
 ```
 
