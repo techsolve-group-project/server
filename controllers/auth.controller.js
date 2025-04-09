@@ -46,6 +46,14 @@ class AuthController {
       next(error);
     }
   }
+
+  static async loginWithGoogle(req, res, next) {
+    try {
+      res.json('Hello Google Login')
+    } catch (error) {
+      next(error)
+    }
+  }
 }
 
 module.exports = AuthController;
