@@ -38,8 +38,9 @@ class QuestionPostController {
           {
             model: Comment,
             attributes: ['id', 'UserId', 'text', 'vote', 'createdAt'],
-            include: { model: User, attributes: ['id', 'name', 'email'] },
             order: [['vote', 'DESC']],
+            separate: true,
+            include: { model: User, attributes: ['id', 'name', 'email'] },
           },
         ],
       });
@@ -62,8 +63,9 @@ class QuestionPostController {
           {
             model: Comment,
             attributes: ['id', 'UserId', 'text', 'vote', 'createdAt'],
-            include: { model: User, attributes: ['id', 'name', 'email'] },
             order: [['vote', 'DESC']],
+            separate: true,
+            include: { model: User, attributes: ['id', 'name', 'email'] },
           },
         ],
       });
@@ -87,8 +89,9 @@ class QuestionPostController {
           {
             model: Comment,
             attributes: ['id', 'UserId', 'text', 'vote', 'createdAt'],
-            include: { model: User, attributes: ['id', 'name', 'email'] },
             order: [['vote', 'DESC']],
+            separate: true,
+            include: { model: User, attributes: ['id', 'name', 'email'] },
           },
         ],
       });
