@@ -4,15 +4,16 @@ const cors = require("cors");
 const { router } = require("./routes/root.route");
 const errorHandler = require("./middlewares/errorHandler");
 
+const {QuestionPost, Comment, User} =  require('./models')
 const app = express();
 const { createServer } = require("http");
 const { Server } = require("socket.io");
 const httpServer = createServer(app);
-const io = new Server(httpServer, { 
+const io = new Server(httpServer, {
   cors: {
-    origin: '*'
-  }
- });
+    origin: "*",
+  },
+});
 
 app.use(cors());
 app.use(express.json());
@@ -25,8 +26,28 @@ app.use(errorHandler);
 io.on("connection", (socket) => {
   // ...
   console.log(socket);
-  console.log(socket.id, '<------ connected socket id');
-  socket.emit('welcome_msg', 'Welcome to TechSolve Server!')
+  console.log(socket.id, "<------ connected socket id");
+  socket.emit("welcome_msg", "Welcome to TechSolve Server!");
+  socket.on("post:question", async (arg) => {
+    try {
+      console.log(arg, "<-----------");
+      const questions = await QuestionPost.findByPk(arg, {
+        include: [
+          { model: User, attributes: ['id', 'name', 'email'] },
+          {
+            model: Comment,
+            attributes: ['id', 'UserId', 'text', 'vote', 'createdAt'],
+            order: [['vote', 'DESC']],
+            separate: true,
+            include: { model: User, attributes: ['id', 'name', 'email'] },
+          },
+        ],
+      });
+      io.emit("question:info", questions);
+    } catch (error) {
+      console.log(error);
+    }
+  });
 });
 
 httpServer.listen(3000, () => {
