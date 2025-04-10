@@ -7,7 +7,7 @@ class QuestionPostController {
       const { title, text } = req.body;
       // --AI LOGIC
       const ai = new GoogleGenAI({
-        apiKey: 'AIzaSyABeKlk4uZOFIXt9v7JH37Z1IQKGaJEzU0',
+        apiKey: process.env.GEMINI_API,
       });
 
       const response = await ai.models.generateContent({
@@ -111,7 +111,7 @@ class QuestionPostController {
       const { title, text } = req.body;
 
       const ai = new GoogleGenAI({
-        apiKey: 'AIzaSyABeKlk4uZOFIXt9v7JH37Z1IQKGaJEzU0',
+        apiKey: process.env.GEMINI_API,
       });
 
       const response = await ai.models.generateContent({
