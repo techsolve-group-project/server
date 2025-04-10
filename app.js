@@ -1,12 +1,14 @@
-require('dotenv').config()
-// console.log(process.env);
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config();
+}
+
 const express = require("express");
 const cors = require("cors");
 
 const { router } = require("./routes/root.route");
 const errorHandler = require("./middlewares/errorHandler");
 
-const {QuestionPost, Comment, User} =  require('./models')
+const { QuestionPost, Comment, User } = require("./models");
 const app = express();
 const { createServer } = require("http");
 const { Server } = require("socket.io");
@@ -35,13 +37,13 @@ io.on("connection", (socket) => {
       console.log(arg, "<-----------");
       const questions = await QuestionPost.findByPk(arg, {
         include: [
-          { model: User, attributes: ['id', 'name', 'email'] },
+          { model: User, attributes: ["id", "name", "email"] },
           {
             model: Comment,
-            attributes: ['id', 'UserId', 'text', 'vote', 'createdAt'],
-            order: [['vote', 'DESC']],
+            attributes: ["id", "UserId", "text", "vote", "createdAt"],
+            order: [["vote", "DESC"]],
             separate: true,
-            include: { model: User, attributes: ['id', 'name', 'email'] },
+            include: { model: User, attributes: ["id", "name", "email"] },
           },
         ],
       });
@@ -52,6 +54,8 @@ io.on("connection", (socket) => {
   });
 });
 
-httpServer.listen(3000, () => {
-  console.log("Server is running on port 3000");
+PORT = process.env.PORT || 3000;
+
+httpServer.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
